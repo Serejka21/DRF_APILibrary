@@ -14,6 +14,7 @@ BOOK_URL = reverse("book:book-list")
 
 
 def sample_book(**params):
+    """Create a sample book for tests"""
     defaults = {
         "title": "Sample book",
         "author": "Same author",
@@ -31,6 +32,7 @@ def detail_url(book_id):
 
 
 class UnauthenticatedBookApiTests(TestCase):
+    """Tests for unauthenticated user that can enable to book list"""
     def setUp(self):
         self.client = APIClient()
 
@@ -39,7 +41,8 @@ class UnauthenticatedBookApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
-class AuthenticatedMovieApiTests(TestCase):
+class AuthenticatedBookApiTests(TestCase):
+    """Tests for Authenticated user that can enable to book (list/detail)"""
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
@@ -71,11 +74,12 @@ class AuthenticatedMovieApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_create_book_forbidden(self):
+        """Test for Authenticated user that can`t create book"""
         payload = {
             "title": "Sample book",
             "author": "Same author",
             "cover": "HARD",
-            "inventory": -1,
+            "inventory": 1,
             "daily_fee": Decimal("4.64")
         }
         res = self.client.post(BOOK_URL, payload)
@@ -83,7 +87,8 @@ class AuthenticatedMovieApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminMovieApiTests(TestCase):
+class AdminBookApiTests(TestCase):
+    """Tests for user with admin permission that can create book"""
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
