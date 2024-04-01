@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
 from borrowings.models import Borrowing
-from borrowings.serializers import BorrowingSerializer, BorrowingDetailSerializer
+from borrowings.serializers import BorrowingSerializer, BorrowingDetailSerializer, BorrowingCreateSerializer
 from borrowings.services import filtering
 
 
@@ -12,13 +12,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     serializer_class = BorrowingSerializer()
 
     def get_queryset(self):
-        if self.request.user.is_staff:
-            return filtering(self.queryset, self.request)
-
-        return filtering(
-            self.queryset.filter(user=self.request.user),
-            self.request
-        )
+        return filtering(self.queryset, self.request)
 
     def get_serializer_class(self):
         if self.action == "retrieve":
