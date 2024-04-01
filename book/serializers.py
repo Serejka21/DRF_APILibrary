@@ -19,10 +19,12 @@ class BookSerializer(serializers.ModelSerializer):
     def validate(self, value):
         if value["inventory"] < 1:
             raise ValidationError(
-                "Inventory can`t be less than 1", code=status.HTTP_403_FORBIDDEN
+                "Inventory can`t be less than 1",
+                code=status.HTTP_403_FORBIDDEN
             )
         if value["daily_fee"] <= 0:
             raise ValidationError(
-                "Daily fee can`t be less than 0", code=status.HTTP_403_FORBIDDEN
+                "Daily fee can`t be less than 0",
+                code=status.HTTP_403_FORBIDDEN
             )
         return value

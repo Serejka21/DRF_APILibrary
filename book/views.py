@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 
 from book.models import Book
-from book.permissions import IsAminOrReadOnly
+from book.permissions import IsAdminOrReadOnly
 from book.serializers import BookSerializer
 
 
@@ -15,4 +15,4 @@ class BookViewSet(
 ):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = (IsAminOrReadOnly, )
+    permission_classes = (IsAdminOrReadOnly,)
