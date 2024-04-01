@@ -7,6 +7,7 @@ class CoverType(models.TextChoices):
 
 
 class Book(models.Model):
+    """Model book"""
     title = models.CharField(max_length=60)
     author = models.CharField(max_length=60, blank=True)
     cover = models.CharField(

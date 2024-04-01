@@ -6,13 +6,9 @@ from book.serializers import BookSerializer
 
 
 class BookViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
+    viewsets.ModelViewSet
 ):
+    """ViewSet for Model book"""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = (IsAdminOrReadOnly,)

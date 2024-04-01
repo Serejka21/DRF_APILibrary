@@ -5,6 +5,7 @@ from book.models import Book
 
 
 class BookSerializer(serializers.ModelSerializer):
+    """Serializer for Model book"""
     class Meta:
         model = Book
         fields = (
@@ -17,6 +18,7 @@ class BookSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, value):
+        """Validate  inventory and daily_fee on positive value"""
         if value["inventory"] < 1:
             raise ValidationError(
                 "Inventory can`t be less than 1",
