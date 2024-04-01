@@ -10,7 +10,5 @@ class Book(models.Model):
     cover = models.CharField(
         max_length=60, choices=Enum('Cover', ['HARD', 'SOFT'])
     )
-    inventory = models.IntegerField(
-        validators=[MinValueValidator(1)],
-    )
+    inventory = models.PositiveIntegerField()
     daily_fee = models.DecimalField(max_digits=10, decimal_places=2)
