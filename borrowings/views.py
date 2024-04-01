@@ -3,6 +3,7 @@ import datetime
 from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
@@ -37,12 +38,16 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-    @action(methods=["GET"], detail=True, url_path="return")
+    @action(
+        methods=["GET"],
+        detail=True,
+        url_path="return",
+        permission_classes=[IsAdminUser]
+    )
     def return_book(self, request, pk):
 
         with transaction.atomic():
             borrowing = Borrowing.objects.get(pk=pk)
-
             borrowing.actual_return_date = datetime.datetime.now()
             borrowing.save()
 
