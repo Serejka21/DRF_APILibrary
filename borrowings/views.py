@@ -2,31 +2,23 @@ from rest_framework import viewsets
 
 from borrowings.models import Borrowing
 from borrowings.serializers import BorrowingSerializer, BorrowingDetailSerializer
+from borrowings.services import filtering
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
+    """Borrowing view set with implemented filtering by user_id or is_active status."""
+
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingSerializer()
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            queryset = self.queryset
+            return filtering(self.queryset, self.request)
 
-            user_id = self.request.query_params.get("user_id")
-            is_active = self.request.query_params.get("is_active")
-
-            if user_id:
-                queryset = queryset.filter(user_id=user_id)
-
-            if is_active == True:
-                queryset = queryset.filter(actual_return_date__isnull=True)
-
-            if is_active == False:
-                queryset = queryset.filter(actual_return_date__isnull=False)
-
-            return queryset
-
-        return self.queryset.filter(user=self.request.user)
+        return filtering(
+            self.queryset.filter(user=self.request.user),
+            self.request
+        )
 
     def get_serializer_class(self):
         if self.action == "retrieve":
