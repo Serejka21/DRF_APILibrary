@@ -21,7 +21,7 @@ class UnauthenticatedMeApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class AuthenticatedMovieApiTest(TestCase):
+class AuthenticatedMeApiTest(TestCase):
     """Tests for Authenticated client"""
     def setUp(self):
         """Set up tests"""
