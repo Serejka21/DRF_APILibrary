@@ -4,6 +4,8 @@ from borrowings.models import Borrowing
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
+    """Borrowing serializer with all fields."""
+
     class Meta:
         model = Borrowing
         fields = (
@@ -17,6 +19,8 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 
 class BorrowingDetailSerializer(BorrowingSerializer):
+    """Borrowing detail serializer."""
+
     pass
 
 
