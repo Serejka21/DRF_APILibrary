@@ -3,6 +3,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 
 TOKEN_URL = reverse("user:token_obtain_pair")
@@ -34,24 +35,14 @@ class TokenApiTest(TestCase):
 
     def test_token_refresh_endpoint(self):
         """Test token refresh endpoint"""
-        payload = {
-            "email": "test@test.com",
-            "password": "test_password"
-        }
-
-        res_token = self.client.post(TOKEN_URL, payload)
-        res_refresh = self.client.post(TOKEN_REFRESH_URL, {"refresh": res_token.data["refresh"]})
+        refresh_token = str(RefreshToken.for_user(self.user))
+        res_refresh = self.client.post(TOKEN_REFRESH_URL, {"refresh": refresh_token})
 
         self.assertEqual(res_refresh.status_code, status.HTTP_200_OK)
 
     def test_token_verify_endpoint(self):
         """Test token verify endpoint"""
-        payload = {
-            "email": "test@test.com",
-            "password": "test_password"
-        }
-
-        res_token = self.client.post(TOKEN_URL, payload)
-        res_refresh = self.client.post(TOKEN_VERIFY_URL, {"token": res_token.data["access"]})
+        access_token = str(AccessToken.for_user(self.user))
+        res_refresh = self.client.post(TOKEN_VERIFY_URL, {"token": access_token})
 
         self.assertEqual(res_refresh.status_code, status.HTTP_200_OK)
