@@ -23,6 +23,10 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "retrieve":
             return BorrowingDetailSerializer
+
+        if self.action == "create":
+            return BorrowingCreateSerializer
+
         return BorrowingSerializer
 
     def perform_create(self, serializer):
