@@ -26,6 +26,8 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
+    """Borrowing create serializer."""
+
     class Meta:
         model = Borrowing
         fields = (
