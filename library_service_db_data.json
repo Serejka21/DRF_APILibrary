@@ -1,0 +1,272 @@
+[
+    {
+        "model": "user.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$320000$6uM28XWOFX6ewyloJzjqmt$L+ZhofPylneoaL2iZS4sZu4ZMUNb4oIevfAdzOMn/eE=",
+            "last_login": "2023-08-08T14:14:03Z",
+            "is_superuser": true,
+            "first_name": "Admin",
+            "last_name": "User",
+            "email": "admin@admin.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-08-08T13:58:29Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$320000$6uM28XWOFX6ewyloJzjqmt$L+ZhofPylneoaL2iZS4sZu4ZMUNb4oIevfAdzOMn/eE=",
+            "last_login": "2023-08-08T14:14:03Z",
+            "is_superuser": false,
+            "first_name": "Bob",
+            "last_name": "Lolipop",
+            "email": "user_bob@user.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-08-08T13:58:29Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },    {
+        "model": "user.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$320000$6uM28XWOFX6ewyloJzjqmt$L+ZhofPylneoaL2iZS4sZu4ZMUNb4oIevfAdzOMn/eE=",
+            "last_login": "2023-08-08T14:14:03Z",
+            "is_superuser": false,
+            "first_name": "Den",
+            "last_name": "Shaten",
+            "email": "user_den@user.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-08-08T13:58:29Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 1,
+        "fields": {
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "cover": "HARD",
+            "inventory": 10,
+            "daily_fee": 2.99
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 2,
+        "fields": {
+            "title": "1984",
+            "author": "George Orwell",
+            "cover": "SOFT",
+            "inventory": 15,
+            "daily_fee": 3.50
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 3,
+        "fields": {
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "cover": "HARD",
+            "inventory": 8,
+            "daily_fee": 4.25
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 4,
+        "fields": {
+            "title": "Harry Potter and the Sorcerer's Stone",
+            "author": "J.K. Rowling",
+            "cover": "HARD",
+            "inventory": 20,
+            "daily_fee": 5.99
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 5,
+        "fields": {
+            "title": "Pride and Prejudice",
+            "author": "Jane Austen",
+            "cover": "SOFT",
+            "inventory": 12,
+            "daily_fee": 3.25
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 6,
+        "fields": {
+            "title": "The Catcher in the Rye",
+            "author": "J.D. Salinger",
+            "cover": "HARD",
+            "inventory": 5,
+            "daily_fee": 4.50
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 7,
+        "fields": {
+            "title": "To the Lighthouse",
+            "author": "Virginia Woolf",
+            "cover": "SOFT",
+            "inventory": 7,
+            "daily_fee": 3.75
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 8,
+        "fields": {
+            "title": "Moby-Dick",
+            "author": "Herman Melville",
+            "cover": "HARD",
+            "inventory": 18,
+            "daily_fee": 6.25
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 9,
+        "fields": {
+            "title": "The Lord of the Rings",
+            "author": "J.R.R. Tolkien",
+            "cover": "HARD",
+            "inventory": 25,
+            "daily_fee": 7.99
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 10,
+        "fields": {
+            "title": "Jane Eyre",
+            "author": "Charlotte Brontë",
+            "cover": "SOFT",
+            "inventory": 9,
+            "daily_fee": 4.75
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 11,
+        "fields": {
+            "title": "The Hobbit",
+            "author": "J.R.R. Tolkien",
+            "cover": "HARD",
+            "inventory": 17,
+            "daily_fee": 6.75
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 12,
+        "fields": {
+            "title": "The Catcher in the Rye",
+            "author": "J.D. Salinger",
+            "cover": "SOFT",
+            "inventory": 13,
+            "daily_fee": 4.50
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 13,
+        "fields": {
+            "title": "Wuthering Heights",
+            "author": "Emily Brontë",
+            "cover": "HARD",
+            "inventory": 11,
+            "daily_fee": 5.25
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 14,
+        "fields": {
+            "title": "The Picture of Dorian Gray",
+            "author": "Oscar Wilde",
+            "cover": "HARD",
+            "inventory": 16,
+            "daily_fee": 6.99
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 15,
+        "fields": {
+            "title": "Brave New World",
+            "author": "Aldous Huxley",
+            "cover": "SOFT",
+            "inventory": 14,
+            "daily_fee": 5.50
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 16,
+        "fields": {
+            "title": "The Odyssey",
+            "author": "Homer",
+            "cover": "HARD",
+            "inventory": 22,
+            "daily_fee": 7.25
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 17,
+        "fields": {
+            "title": "Frankenstein",
+            "author": "Mary Shelley",
+            "cover": "SOFT",
+            "inventory": 10,
+            "daily_fee": 4.99
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 18,
+        "fields": {
+            "title": "The Adventures of Sherlock Holmes",
+            "author": "Arthur Conan Doyle",
+            "cover": "HARD",
+            "inventory": 19,
+            "daily_fee": 6.50
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 19,
+        "fields": {
+            "title": "One Hundred Years of Solitude",
+            "author": "Gabriel García Márquez",
+            "cover": "SOFT",
+            "inventory": 10,
+            "daily_fee": 5.99
+        }
+    },
+    {
+        "model": "book.book",
+        "pk": 20,
+        "fields": {
+            "title": "Harry Potter and the the Cursed Child",
+            "author": "J.K. Rowling",
+            "cover": "HARD",
+            "inventory": 20,
+            "daily_fee": 6.99
+        }
+    }
+]
