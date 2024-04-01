@@ -16,7 +16,8 @@ from borrowings.services import filtering
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
-    """Borrowing view set with implemented filtering by user_id or is_active status."""
+    """Borrowing view set with implemented filtering
+     by user_id or is_active status and custom action return."""
 
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingSerializer()
