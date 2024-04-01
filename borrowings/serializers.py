@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
+from book.serializers import BookSerializer
 from borrowings.models import Borrowing
+from user.serializers import UserSerializer
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -40,6 +42,17 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
 class BorrowingDetailSerializer(BorrowingSerializer):
     """Borrowing detail serializer."""
 
-    pass
+    book = BookSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
 
+    class Meta:
+        model = Borrowing
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+        )
 
