@@ -6,6 +6,11 @@ from borrowings.models import Borrowing
 class BorrowingSerializer(serializers.ModelSerializer):
     """Borrowing serializer with all fields."""
 
+    book = serializers.StringRelatedField()
+    user_email = serializers.CharField(
+        source="user.email", read_only=True
+    )
+
     class Meta:
         model = Borrowing
         fields = (
@@ -14,7 +19,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
-            "user",
+            "user_email",
         )
 
 
