@@ -1,4 +1,6 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
+from django.utils import timezone
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -9,6 +11,7 @@ from rest_framework import status
 
 from book.models import Book
 from book.serializers import BookSerializer
+from borrowings.models import Borrowing
 
 BOOK_URL = reverse("book:book-list")
 
@@ -88,25 +91,44 @@ class AuthenticatedBookApiTests(TestCase):
 
 
 class AdminBookApiTests(TestCase):
-    """Tests for user with admin permission that can create book"""
+    """Tests for user with admin permission that can create/delete book"""
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
             "admin@admin.com", "testpass", is_staff=True
         )
         self.client.force_authenticate(self.user)
-
-    def test_create_book(self):
-        payload = payload = {
+        self.payload = {
             "title": "Sample book",
             "author": "Same author",
             "cover": "HARD",
             "inventory": 1,
             "daily_fee": Decimal("4.64")
         }
-        res = self.client.post(BOOK_URL, payload)
+        self.book = Book.objects.create(**self.payload)
+        self.borrowing = Borrowing.objects.create(
+            borrow_date=timezone.now(),
+            expected_return_date=timezone.now() + timezone.timedelta(days=7),
+            book=self.book,
+            user=self.user
+        )
+
+    def test_create_book(self):
+        res = self.client.post(BOOK_URL, self.payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         book = Book.objects.get(id=res.data["id"])
-        for key in payload.keys():
-            self.assertEqual(payload[key], getattr(book, key))
+        for key in self.payload.keys():
+            self.assertEqual(self.payload[key], getattr(book, key))
+
+    def test_delete_book_without_borrowings(self):
+        res = self.client.post(BOOK_URL, self.payload)
+        book = Book.objects.get(id=res.data["id"])
+
+        delete_res = self.client.delete(reverse('book:book-detail', args=[book.id]))
+        self.assertEqual(delete_res.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_book_with_borrowings(self):
+
+        delete_res = self.client.delete(reverse('book:book-detail', args=[self.book.id]))
+        self.assertEqual(delete_res.status_code, status.HTTP_400_BAD_REQUEST)
