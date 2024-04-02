@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import transaction
+from django.shortcuts import redirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -15,6 +16,7 @@ from borrowings.serializers import (
     BorrowingReturnSerializer,
 )
 from borrowings.services import filtering
+from payment.utils.services import PaymentService
 
 
 class BorrowingPagination(PageNumberPagination):
@@ -34,16 +36,17 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
+        with transaction.atomic():
+            self.perform_create(serializer)
 
-        borrowing = Borrowing.objects.get(pk=serializer["id"].value)
-        borrowing.book.inventory -= 1
-        borrowing.book.save()
+            borrowing = Borrowing.objects.get(pk=serializer["id"].value)
+            borrowing.book.inventory -= 1
+            borrowing.book.save()
 
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+            PaymentService().create_payment(borrowing)
+            session_url = borrowing.payments.last().session_url
+
+            return redirect(session_url)
 
     def get_queryset(self):
         return filtering(self.queryset, self.request)
@@ -61,31 +64,35 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
     @action(
-        methods=["GET"],
+        methods=["POST"],
         detail=True,
         url_path="return",
         permission_classes=[IsAdminUser]
     )
     def return_book(self, request, pk):
         """Custom return_book action"""
+        borrowing = Borrowing.objects.get(pk=pk)
+
+        if borrowing.actual_return_date:
+            data = {"error": "This borrowing is already closed"}
+            return Response(
+                data=data,
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         with transaction.atomic():
-            borrowing = Borrowing.objects.get(pk=pk)
-
-            data = {"error": "This borrowing is already closed"}
-
-            if borrowing.actual_return_date:
-                return Response(
-                    data=data,
-                    status=status.HTTP_403_FORBIDDEN
-                )
-
             serializer = BorrowingReturnSerializer(borrowing)
 
-            borrowing.actual_return_date = datetime.date.today()
+            borrowing.actual_return_date = datetime.datetime.now().date()
             borrowing.save()
 
             borrowing.book.inventory += 1
             borrowing.book.save()
+
+            if borrowing.actual_return_date > borrowing.expected_return_date:
+                PaymentService().calculate_fine(borrowing)
+                session_url = borrowing.payments.last().session_url
+
+                return redirect(session_url)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
