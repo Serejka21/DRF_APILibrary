@@ -23,6 +23,20 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingSerializer()
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        borrowing = Borrowing.objects.get(pk=serializer["id"].value)
+        borrowing.book.inventory -= 1
+        borrowing.book.save()
+
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+
     def get_queryset(self):
         return filtering(self.queryset, self.request)
 
