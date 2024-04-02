@@ -48,9 +48,18 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             borrowing = Borrowing.objects.get(pk=pk)
-            borrowing.actual_return_date = datetime.datetime.now()
-            borrowing.save()
+
+            data = {"error": "This borrowing is already closed"}
+
+            if borrowing.actual_return_date:
+                return Response(
+                    data=data,
+                    status=status.HTTP_403_FORBIDDEN
+                )
 
             serializer = BorrowingReturnSerializer(borrowing)
+
+            borrowing.actual_return_date = datetime.datetime.now()
+            borrowing.save()
 
             return Response(serializer.data, status=status.HTTP_200_OK)
