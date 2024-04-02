@@ -24,3 +24,4 @@ setuptools==69.2.0
 sqlparse==0.4.4
 tzdata==2024.1
 uritemplate==4.1.1
+stripe==8.9.0
