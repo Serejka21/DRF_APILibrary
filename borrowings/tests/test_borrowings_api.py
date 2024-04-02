@@ -23,12 +23,13 @@ def sample_borrowing(**params):
     defaults = {
         "expected_return_date": "2024-06-07",
         "book": book,
-        "user": params["user"]
+        "user": params["user"],
+        "actual_return_date": None
     }
 
     defaults.update(params)
 
-    Borrowing.objects.create(**defaults)
+    return Borrowing.objects.create(**defaults)
 
 
 class UnauthenticatedBorrowingApiTests(TestCase):
@@ -50,7 +51,6 @@ class AuthenticatedBorrowingApiTests(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_list_borrowing(self):
-
         sample_borrowing(user=self.user)
         sample_borrowing(user=self.user)
 
@@ -61,4 +61,20 @@ class AuthenticatedBorrowingApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.data["results"], serializer.data)
+
+    def test_filter_borrowings_by_is_active(self):
+        active_borrowing = sample_borrowing(user=self.user)
+        inactive_borrowing = sample_borrowing(
+            user=self.user, actual_return_date="2024-06-07"
+        )
+
+        res = self.client.get(
+            BORROWING_URL, {"is_active": "true"}
+        )
+
+        active_serializer = BorrowingSerializer(active_borrowing)
+        inactive_serializer = BorrowingSerializer(inactive_borrowing)
+
+        self.assertIn(active_serializer.data, res.data["results"])
+        self.assertNotIn(inactive_serializer.data, res.data["results"])
