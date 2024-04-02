@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from book.serializers import BookSerializer
 from borrowings.models import Borrowing
+from borrowings.services import borrowing_create_validation
 from user.serializers import UserSerializer
 
 
@@ -39,6 +40,11 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "user",
         )
         read_only_fields = ("borrow_date", "actual_return_date", "user")
+
+    def validate(self, attrs):
+        validated_attrs = borrowing_create_validation(attrs)
+
+        return validated_attrs
 
 
 class BorrowingDetailSerializer(BorrowingSerializer):
