@@ -39,3 +39,26 @@ class UnauthenticatedBorrowingApiTests(TestCase):
         res = self.client.get(BORROWING_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
+class AuthenticatedBorrowingApiTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            "test@test.com",
+            "testpass",
+        )
+        self.client.force_authenticate(self.user)
+
+    def test_list_borrowing(self):
+
+        sample_borrowing(user=self.user)
+        sample_borrowing(user=self.user)
+
+        res = self.client.get(BORROWING_URL)
+
+        borrowings = Borrowing.objects.all()
+        serializer = BorrowingSerializer(borrowings, many=True)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(res.data, serializer.data)
