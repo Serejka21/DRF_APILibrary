@@ -76,4 +76,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             borrowing.actual_return_date = datetime.datetime.now()
             borrowing.save()
 
+            borrowing.book.inventory += 1
+            borrowing.book.save()
+
             return Response(serializer.data, status=status.HTTP_200_OK)
