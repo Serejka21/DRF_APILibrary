@@ -1,13 +1,15 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from book.models import Book
 from borrowings.models import Borrowing
 from borrowings.serializers import BorrowingSerializer
-from user.models import User
 
 BORROWING_URL = reverse("borrowings:borrowing-list")
 
@@ -20,8 +22,10 @@ def sample_borrowing(**params):
         daily_fee=2
     )
 
+    now = timezone.now()
+
     defaults = {
-        "expected_return_date": "2024-06-07",
+        "expected_return_date": now,
         "book": book,
         "user": params["user"],
         "actual_return_date": None
@@ -66,7 +70,8 @@ class AuthenticatedBorrowingApiTests(TestCase):
     def test_filter_borrowings_by_is_active(self):
         active_borrowing = sample_borrowing(user=self.user)
         inactive_borrowing = sample_borrowing(
-            user=self.user, actual_return_date="2024-06-07"
+            user=self.user,
+            actual_return_date="2024-04-02T16:26:06.199551Z"
         )
 
         res = self.client.get(
