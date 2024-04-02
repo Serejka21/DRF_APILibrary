@@ -1,5 +1,6 @@
 from collections import OrderedDict
-from datetime import date, timedelta
+import datetime
+from django.utils import timezone
 
 from django.db.models.query import QuerySet
 from rest_framework import status
@@ -32,8 +33,8 @@ def filtering(
 def borrowing_create_validation(attrs: OrderedDict) -> OrderedDict:
     expected_return_date = attrs["expected_return_date"]
 
-    now = date.today()
-    now_plus_one_day = now + timedelta(days=1)
+    now = timezone.now()
+    now_plus_one_day = now + datetime.timedelta(days=1)
 
     if expected_return_date < now_plus_one_day:
         raise ValidationError(
