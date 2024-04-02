@@ -78,3 +78,74 @@ class AuthenticatedBorrowingApiTests(TestCase):
 
         self.assertIn(active_serializer.data, res.data["results"])
         self.assertNotIn(inactive_serializer.data, res.data["results"])
+
+    def test_borrowing_create(self):
+
+        book = Book.objects.create(
+            title="testBook",
+            author="testAuthor",
+            inventory=5,
+            daily_fee=2
+        )
+
+        now = timezone.now()
+        now_plus_one_day = now + datetime.timedelta(days=1, minutes=1)
+
+        payload = {
+            "expected_return_date": now_plus_one_day,
+            "book": book.id,
+            "user": self.user.id,
+        }
+
+        res = self.client.post(BORROWING_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_302_FOUND)
+
+    def test_can_not_borrow_book_less_than_one_day(self):
+
+        book = Book.objects.create(
+            title="testBook",
+            author="testAuthor",
+            inventory=5,
+            daily_fee=2
+        )
+
+        now = timezone.now()
+        now_plus_one_day = now + datetime.timedelta(hours=23, minutes=59)
+
+        payload = {
+            "expected_return_date": now_plus_one_day,
+            "book": book.id,
+            "user": self.user.id,
+        }
+
+        res = self.client.post(BORROWING_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class AdminBorrowingApiTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            "admin@admin.com", "testpass", is_staff=True
+        )
+        self.client.force_authenticate(self.user)
+
+    def test_filter_borrowings_by_user_id(self):
+        user2 = get_user_model().objects.create_user(
+            "user2@email.com", "testpass_user2"
+        )
+
+        borrowing1 = sample_borrowing(user=self.user)
+        borrowing2 = sample_borrowing(user=user2)
+
+        res = self.client.get(
+            BORROWING_URL, {"user_id": "1"}
+        )
+
+        active_serializer = BorrowingSerializer(borrowing1)
+        inactive_serializer = BorrowingSerializer(borrowing2)
+
+        self.assertIn(active_serializer.data, res.data["results"])
+        self.assertNotIn(inactive_serializer.data, res.data["results"])
