@@ -1,5 +1,4 @@
 import os
-from decimal import Decimal
 
 import stripe
 
@@ -16,11 +15,7 @@ class PaymentService:
     CANCEL_URL = "http://localhost:8000/api/library/payments/cancel/"
 
     @classmethod
-    def _create_stripe_session(
-            cls,
-            borrowing: Borrowing,
-            money_to_pay: Decimal
-    ):
+    def _create_stripe_session(cls, borrowing, money_to_pay):
         """
         Create a Stripe checkout session for the given borrowing.
 
@@ -54,7 +49,7 @@ class PaymentService:
         return session
 
     @classmethod
-    def create_payment(cls, borrowing: Borrowing) -> None:
+    def create_payment(cls, borrowing):
         """
         Create a new payment for the given borrowing.
 
@@ -82,7 +77,7 @@ class PaymentService:
         )
 
     @classmethod
-    def calculate_fine(cls, borrowing: Borrowing) -> None:
+    def calculate_fine(cls, borrowing):
         """
         Calculate the fine for a borrowing.
 
