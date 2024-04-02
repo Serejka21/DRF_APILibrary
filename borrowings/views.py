@@ -59,6 +59,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAdminUser]
     )
     def return_book(self, request, pk):
+        """Custom return_book action"""
 
         with transaction.atomic():
             borrowing = Borrowing.objects.get(pk=pk)
