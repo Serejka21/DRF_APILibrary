@@ -3,7 +3,7 @@ import datetime
 from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
@@ -22,6 +22,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingSerializer()
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
