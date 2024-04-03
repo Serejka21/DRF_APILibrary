@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import stripe
 
 from DRF_API_Library import settings
@@ -35,7 +37,7 @@ class PaymentService:
                         "product_data": {
                             "name": borrowing.book.title,
                         },
-                        "unit_amount": int(money_to_pay) * 100,
+                        "unit_amount": int(Decimal(money_to_pay) * 100),
                     },
                     "quantity": 1,
                 },
