@@ -83,7 +83,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = BorrowingReturnSerializer(borrowing)
 
-            borrowing.actual_return_date = datetime.datetime.now().date()
+            borrowing.actual_return_date = timezone.now().date()
             borrowing.save()
 
             borrowing.book.inventory += 1
