@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.shortcuts import redirect
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -96,3 +97,16 @@ class BorrowingViewSet(viewsets.ModelViewSet):
                 return redirect(session_url)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="user_id",
+                type={"type": "array", "items": {"type": "number"}},
+                description="Filter by user id (ex. ?user_id=1,4)"
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """Get all borrowings"""
+        return super().list(request, *args, **kwargs)
