@@ -27,10 +27,8 @@ def sample_borrowing(**params):
         daily_fee=2
     )
 
-    now = timezone.now()
-
     defaults = {
-        "expected_return_date": now,
+        "expected_return_date": NOW,
         "book": book,
         "user": params["user"],
         "actual_return_date": None
@@ -42,6 +40,7 @@ def sample_borrowing(**params):
 
 
 class UnauthenticatedBorrowingApiTests(TestCase):
+
     def setUp(self):
         self.client = APIClient()
 
@@ -51,6 +50,7 @@ class UnauthenticatedBorrowingApiTests(TestCase):
 
 
 class AuthenticatedBorrowingApiTests(TestCase):
+
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
@@ -74,9 +74,10 @@ class AuthenticatedBorrowingApiTests(TestCase):
 
     def test_filter_borrowings_by_is_active(self):
         active_borrowing = sample_borrowing(user=self.user)
+
         inactive_borrowing = sample_borrowing(
             user=self.user,
-            actual_return_date="2024-04-02T16:26:06.199551Z"
+            actual_return_date="2024-02-03"
         )
 
         res = self.client.get(
@@ -90,7 +91,6 @@ class AuthenticatedBorrowingApiTests(TestCase):
         self.assertNotIn(inactive_serializer.data, res.data["results"])
 
     def test_borrowing_create(self):
-
         book = Book.objects.create(
             title="testBook",
             author="testAuthor",
@@ -98,13 +98,9 @@ class AuthenticatedBorrowingApiTests(TestCase):
             daily_fee=2
         )
 
-        now = timezone.now()
-        now_plus_one_day = now + datetime.timedelta(days=1, minutes=1)
-
         payload = {
-            "expected_return_date": now_plus_one_day,
+            "expected_return_date": NOW_PLUS_ONE_DAY,
             "book": book.id,
-            "user": self.user.id,
         }
 
         res = self.client.post(BORROWING_URL, payload)
@@ -112,7 +108,6 @@ class AuthenticatedBorrowingApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_302_FOUND)
 
     def test_can_not_borrow_book_less_than_one_day(self):
-
         book = Book.objects.create(
             title="testBook",
             author="testAuthor",
@@ -120,11 +115,8 @@ class AuthenticatedBorrowingApiTests(TestCase):
             daily_fee=2
         )
 
-        now = timezone.now()
-        now_plus_one_day = now + datetime.timedelta(hours=23, minutes=59)
-
         payload = {
-            "expected_return_date": now_plus_one_day,
+            "expected_return_date": NOW,
             "book": book.id,
             "user": self.user.id,
         }
@@ -135,6 +127,7 @@ class AuthenticatedBorrowingApiTests(TestCase):
 
 
 class AdminBorrowingApiTests(TestCase):
+
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
@@ -154,8 +147,27 @@ class AdminBorrowingApiTests(TestCase):
             BORROWING_URL, {"user_id": "1"}
         )
 
-        active_serializer = BorrowingSerializer(borrowing1)
-        inactive_serializer = BorrowingSerializer(borrowing2)
+        borrowing_1_serializer = BorrowingSerializer(borrowing1)
+        borrowing_2_serializer = BorrowingSerializer(borrowing2)
 
-        self.assertIn(active_serializer.data, res.data["results"])
-        self.assertNotIn(inactive_serializer.data, res.data["results"])
+        self.assertIn(
+            borrowing_1_serializer.data, res.data["results"]
+        )
+        self.assertNotIn(
+            borrowing_2_serializer.data, res.data["results"]
+        )
+
+    def test_return_book_custom_endpoint(self):
+        borrowing = sample_borrowing(user=self.user)
+
+        self.assertEqual(borrowing.actual_return_date, None)
+
+        url = return_url(borrowing.id)
+        res = self.client.post(url)
+
+        borrowing.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            str(borrowing.actual_return_date), res.data["actual_return_date"]
+        )
