@@ -7,7 +7,11 @@ from payment.models import Payment
 successful_payment = Signal()
 
 
-@receiver(successful_payment, sender=Payment, dispatch_uid="post_save_signal_processed")
+@receiver(
+    successful_payment,
+    sender=Payment,
+    dispatch_uid="post_save_signal_processed"
+)
 def send_success_payment_message(sender, instance, created, **kwargs):
     """Handle successful payment"""
     if created:

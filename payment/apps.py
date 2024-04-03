@@ -8,4 +8,3 @@ class PaymentConfig(AppConfig):
     def ready(self) -> None:
         """Connect signal handlers"""
         from . import signals
-

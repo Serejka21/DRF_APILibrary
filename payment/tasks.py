@@ -10,7 +10,8 @@ TOKEN = settings.TOKEN
 CHAT_ID = settings.CHAT_ID
 
 # add message at the end of url
-URL = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text="
+URL = (f"https://api.telegram.org/bot{TOKEN}"
+       f"/sendMessage?chat_id={CHAT_ID}&text=")
 
 
 @shared_task()

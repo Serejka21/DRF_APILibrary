@@ -5,7 +5,11 @@ from borrowings.tasks import send_borrowing_created_notification
 from borrowings.models import Borrowing
 
 
-@receiver(post_save, sender=Borrowing, dispatch_uid="post_save_signal_processed")
+@receiver(
+    post_save,
+    sender=Borrowing,
+    dispatch_uid="post_save_signal_processed"
+)
 def send_borrowing_created_message(sender, instance, created, **kwargs):
     """Handle creation of Borrowing"""
     try:
