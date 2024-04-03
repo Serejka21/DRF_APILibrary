@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
+from django.db.models import signals
 
 from book.models import Book
 from borrowings.models import Borrowing
@@ -52,6 +53,7 @@ class UnauthenticatedBorrowingApiTests(TestCase):
 class AuthenticatedBorrowingApiTests(TestCase):
 
     def setUp(self):
+        signals.post_save.disconnect(sender=Borrowing, dispatch_uid="post_save_signal_processed")
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
             "test@test.com",
