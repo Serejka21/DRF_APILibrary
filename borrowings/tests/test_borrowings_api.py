@@ -13,6 +13,11 @@ from borrowings.serializers import BorrowingSerializer
 
 BORROWING_URL = reverse("borrowings:borrowing-list")
 
+NOW = timezone.now().date()
+NOW_PLUS_ONE_DAY = NOW + datetime.timedelta(days=1)
+
+def return_url(borrowing_id):
+    return reverse("borrowings:borrowing-return", args=[borrowing_id])
 
 def sample_borrowing(**params):
     book = Book.objects.create(
