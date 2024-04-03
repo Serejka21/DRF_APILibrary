@@ -26,6 +26,8 @@ This project is a Django-based RESTful API framework designed to manage various 
 **Core**:
 - Django
 - Django REST Framework (DRF)
+- Celery - for notification
+- Stripe - for payment
 ***
 **DataBase**: PostgreSQL
 ***
@@ -78,9 +80,9 @@ To get started with the project, follow these steps:
 
         /api/library/payments/
 
-        /api/library/token/
+        /api/library/user/token/
 
-        /api/library/register/
+        /api/library/user/register/
 
         /admin/
 
