@@ -16,7 +16,10 @@ class BookViewSet(
 
     def perform_destroy(self, instance):
         """Protection of the book from destroy if it has min 1 borrowing"""
-        if instance.borrowings:
+        if instance.borrowings.count() == 0:
+            instance.delete()
+
+        else:
             raise ValidationError(
                 "You cannot delete this book. Book has borrowings",
                 code=status.HTTP_403_FORBIDDEN
