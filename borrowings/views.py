@@ -1,7 +1,6 @@
-import datetime
-
 from django.db import transaction
 from django.shortcuts import redirect
+from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -67,6 +66,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         methods=["POST"],
         detail=True,
         url_path="return",
+        url_name="return",
         permission_classes=[IsAdminUser]
     )
     def return_book(self, request, pk):
