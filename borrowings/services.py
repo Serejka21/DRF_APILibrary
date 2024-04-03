@@ -33,7 +33,7 @@ def filtering(
 def borrowing_create_validation(attrs: OrderedDict) -> OrderedDict:
     expected_return_date = attrs["expected_return_date"]
 
-    now = timezone.now()
+    now = timezone.now().date()
     now_plus_one_day = now + datetime.timedelta(days=1)
 
     if expected_return_date < now_plus_one_day:
