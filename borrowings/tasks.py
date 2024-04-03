@@ -50,7 +50,7 @@ def check_borrowings_for_overdue() -> None:
     """Check borrowings for overdue and send notification about borrowings status"""
     overdue_missing = True
     for borrowing in Borrowing.objects.all():
-        if borrowing.borrow_date - borrowing.expected_return_date <= timedelta(days=1):
+        if borrowing.expected_return_date - borrowing.borrow_date <= timedelta(days=1):
             send_borrowing_overdue_notification.delay(
                 borrowing.id,
                 borrowing.user.email,
