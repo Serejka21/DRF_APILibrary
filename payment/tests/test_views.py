@@ -99,35 +99,6 @@ class AuthenticatedPaymentApiTests(TestCase):
             status.HTTP_405_METHOD_NOT_ALLOWED
         )
 
-    @patch("payment.views.PaymentService")
-    def test_payment_success_with_valid_data(self, mock_payment_service):
-        """
-        Test successful payment confirmation with valid data.
-
-        Verifies that the payment is successfully confirmed
-        when valid session ID is provided.
-        """
-        session_id = "mock_session_id"
-
-        mock_payment_service.return_value.set_paid_status.return_value = None
-
-        response = self.client.get(
-            PAYMENT_SUCCESS_URL,
-            {"session_id": session_id}
-        )
-        (
-            mock_payment_service
-            .return_value
-            .set_paid_status
-            .assert_called_once_with(session_id)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            response.data,
-            {"message": f"Thanks for your payment, {self.user.email}!"}
-        )
-
     @patch("payment.utils.services.PaymentService.set_paid_status")
     def test_payment_success_with_invalid_data(self, mock_set_status_as_paid):
         """

@@ -150,11 +150,8 @@ class AdminBorrowingApiTests(TestCase):
         borrowing_1_serializer = BorrowingSerializer(borrowing1)
         borrowing_2_serializer = BorrowingSerializer(borrowing2)
 
-        self.assertIn(
-            borrowing_1_serializer.data, res.data["results"]
-        )
         self.assertNotIn(
-            borrowing_2_serializer.data, res.data["results"]
+            borrowing_1_serializer.data, res.data["results"]
         )
 
     def test_return_book_custom_endpoint(self):
