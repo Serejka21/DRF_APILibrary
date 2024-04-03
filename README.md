@@ -1,4 +1,4 @@
-# Django RESTful API for Theatre Management
+# Django RESTful API for Library Management
 
 This project is a Django-based RESTful API framework designed to manage various aspects of a library business process. It includes models for Book, Payment, Borrowings  allowing users to efficiently handle library-related operations.
 
@@ -14,6 +14,11 @@ This project is a Django-based RESTful API framework designed to manage various 
 
 
 - **Notification:** Automatic reminder to users about their borrowing through the Telegram bot. Users will also receive a message about borrowing with all the necessary information in Telegram
+
+
+- **Authorization:** JWT authentication
+
+- **Documentation:** by swagger
 
 
 ## Tech Stack
@@ -35,7 +40,7 @@ To get started with the project, follow these steps:
 
 1. Clone the repository to your local machine:
 
-        git clone https://github.com/PythonZem/theatre-api-service-DRF.git
+        git clone https://github.com/Serejka21/DRF_APILibrary.git
 
 2. Navigate to the project directory:
 
@@ -61,15 +66,21 @@ To get started with the project, follow these steps:
 
 7. Access the API at http://localhost:8000/ and explore the available endpoints.
 
+**P.S. project doesn't work on Windows without Docker. Because Celery is used in the project**
+
+***
+
 **Available main endpoints:**
 
         /api/library/borrowings/
 
-        /api/library/book/
+        /api/library/books/
 
-        /api/library/payment/
+        /api/library/payments/
 
-        /api/library/user/
+        /api/library/token/
+
+        /api/library/register/
 
         /admin/
 
@@ -82,6 +93,11 @@ For detailed API documentation and endpoint usage, refer to the API documentatio
 
         docker-compose build
         ducker-compose up
+
+## Default user for testing
+
+- **Email:** admin@admin.com
+- **Password:** 1qazcde3
 
 ## User endpoints:
 
