@@ -1,13 +1,12 @@
-import os
-
 import stripe
 
+from DRF_API_Library import settings
 from payment.models import Borrowing, Payment
 
 
 class PaymentService:
     FINE_MULTIPLIER = 2
-    STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY")
+    STRIPE_API_KEY = settings.STRIPE_API_KEY
     SUCCESS_URL = (
         "http://localhost:8000/api/library/"
         "payments/success?session_id={CHECKOUT_SESSION_ID}"

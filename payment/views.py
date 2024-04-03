@@ -9,6 +9,7 @@ from payment.serializers import (
     PaymentSuccessSerializer
 )
 from payment.utils.services import PaymentService
+from payment.signals import successful_payment
 
 
 class PaymentViewSet(
@@ -51,6 +52,11 @@ class PaymentViewSet(
 
         try:
             PaymentService().set_paid_status(session_id)
+            successful_payment.send_robust(
+                sender=Payment,
+                instance=Payment.objects.get(session_id=session_id),
+                created=True
+            )
             return Response(
                 {"message": f"Thanks for your payment, {request.user.email}!"},
                 status=status.HTTP_200_OK
